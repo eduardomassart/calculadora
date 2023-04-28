@@ -7,10 +7,12 @@ var numeros = document.querySelectorAll('.numeros');
 
 
 var operacao;
+var definiuOperador = false;
 var primeiroValor;
 var segundoValor;
 var acumulado;
-var primeiraOperacaoAoDefinirOperador = true;
+var primeiraOperacao = true;
+var addPonto = false;
 
 // for (var contador = 0; contador < numeros.length; contador++) {
 //   var numero = numeros[contador];
@@ -25,88 +27,98 @@ var primeiraOperacaoAoDefinirOperador = true;
 numeros.forEach(function(numero){
     
     numero.addEventListener('click', function () {
-        display.value += numero.value;
+        if((display.value == 0 || definiuOperador) && addPonto == false){
+            display.value = numero.value;
+            definiuOperador = false;
+        } else {
+            display.value += numero.value;
+            addPonto = false;
+        }
     })
 })
+
+pontoSeparador.onclick = function(){
+    acumulado = display.value + pontoSeparador.textContent;
+    display.value = acumulado;
+    addPonto = true;
+}
 
 operadores.forEach(function(operador){
 
     operador.addEventListener('click', function(){
         operacao = operador.value;
-        if(primeiraOperacaoAoDefinirOperador){
-            primeiroValor = parseFloat(display.value);
-            if(display.value == ''){
-                primeiroValor = 0;
-            }   
+        if(primeiraOperacao){
+            primeiroValor = display.value;
         } else {
             primeiroValor = acumulado;
-            primeiraOperacaoAoDefinirOperador = true;
+            primeiraOperacao = true;
         }
-        display.value = "";
+        definiuOperador = true;
         
     })
 })
 
 igual.onclick = function () {
     if(operacao == "somar"){
-        if(primeiraOperacaoAoDefinirOperador == false){
-            display.value = acumulado + segundoValor;
-            acumulado = parseFloat(display.value);
+        if(primeiraOperacao == false){
+            display.value = parseFloat(acumulado) + parseFloat(segundoValor);
+            acumulado = display.value;
         }
-        if(primeiraOperacaoAoDefinirOperador){
-            segundoValor = parseFloat(display.value);
-            acumulado = primeiroValor + segundoValor;
+        if(primeiraOperacao){
+            segundoValor = display.value;
+            acumulado = parseFloat(primeiroValor) + parseFloat(segundoValor);
             display.value = acumulado;
         }
 
     }
         
     if(operacao == "multiplicar"){
-        if(primeiraOperacaoAoDefinirOperador == false){
-            display.value = acumulado * segundoValor;
-            acumulado = parseFloat(display.value);
+        if(primeiraOperacao == false){
+            display.value = acumulado * parseFloat(segundoValor);
+            acumulado = display.value;
         }
-        if(primeiraOperacaoAoDefinirOperador){
-            segundoValor = parseFloat(display.value);
-            acumulado = primeiroValor * segundoValor;
+        if(primeiraOperacao){
+            segundoValor = display.value;
+            acumulado = parseFloat(primeiroValor) * parseFloat(segundoValor);
             display.value = acumulado;
         }
 
     }
 
     if(operacao == "dividir"){
-        if(primeiraOperacaoAoDefinirOperador == false){
-            display.value = acumulado / segundoValor;
+        if(primeiraOperacao == false){
+            display.value = acumulado / parseFloat(segundoValor);
             acumulado = display.value;
         }
-        if(primeiraOperacaoAoDefinirOperador){
-            segundoValor = parseFloat(display.value);
-            acumulado = primeiroValor / segundoValor;
+        if(primeiraOperacao){
+            segundoValor = display.value;
+            acumulado = parseFloat(primeiroValor) / parseFloat(segundoValor);
             display.value = parseFloat(acumulado);
         }
 
     }
 
     if(operacao == "subtrair"){
-        if(primeiraOperacaoAoDefinirOperador == false){
-            display.value = acumulado - segundoValor;
+        if(primeiraOperacao == false){
+            display.value = acumulado - parseFloat(segundoValor);
             acumulado = parseFloat(display.value);
         }
-        if(primeiraOperacaoAoDefinirOperador){
-            segundoValor = parseFloat(display.value);
-            acumulado = primeiroValor - segundoValor;
+        if(primeiraOperacao){
+            segundoValor = display.value;
+            acumulado = parseFloat(primeiroValor) - parseFloat(segundoValor);
             display.value = acumulado;
         }
     }
 
-    primeiraOperacaoAoDefinirOperador = false;
+    primeiraOperacao = false;
 }
 
 reset.onclick = function(){
-    display.value = "";
+    display.value = 0;
     operacao = 0;
+    definiuOperador = false;
     acumulado = 0;
     primeiroValor = 0;
     segundoValor = 0;
-    primeiraOperacaoAoDefinirOperador = true;
+    primeiraOperacao = true;
 }
